@@ -190,6 +190,11 @@ public class GameActivity extends Activity
         }
 
     }
+    private void onHowToPlay(View view)
+    {
+        Intent howToPlayIntent = new Intent(this,HowToPlay.class);
+        startActivity(howToPlayIntent);
+    }
 
     private void playGame()
     {
