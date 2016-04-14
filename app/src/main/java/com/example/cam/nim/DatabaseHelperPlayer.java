@@ -1,21 +1,21 @@
 package com.example.cam.nim;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import android.content.ContentValues;
-
-public class DatabaseHelperEasy extends SQLiteOpenHelper{
-    public static final String PLAYER_DATABASE = "easy1.db";
-    public static final String TABLE_NAME = "easy_table";
+public class DatabaseHelperPlayer extends SQLiteOpenHelper {
+    public static final String PLAYER_DATABASE = "player1.db";
+    public static final String TABLE_NAME = "player_table";
     public static final String COL_ID = "ID";
     public static final String COL_NAME = "NAME";
     public static final String COL_SCORE = "SCORE";
     public static final String COL_STREAK = "STREAK";
 
-    public DatabaseHelperEasy(Context context) {
+
+    public DatabaseHelperPlayer(Context context) {
         super(context, PLAYER_DATABASE, null, 1);
     }
 
@@ -37,6 +37,7 @@ public class DatabaseHelperEasy extends SQLiteOpenHelper{
         contentValues.put(COL_SCORE,score);
         contentValues.put(COL_STREAK,streak);
 
+
         long result = db.insert(TABLE_NAME,null ,contentValues);
         if(result == -1)
             return false;
@@ -49,7 +50,7 @@ public class DatabaseHelperEasy extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + COL_NAME + "=\"" + playerName + "\";");
     }
-    //return string sorted base on winning percentage
+
     public String databaseToString(){
         int count = 1;
         SQLiteDatabase db =  getWritableDatabase();
@@ -59,7 +60,6 @@ public class DatabaseHelperEasy extends SQLiteOpenHelper{
         StringBuffer buffer = new StringBuffer();
         while(res.moveToNext())
         {
-            //buffer.append("ID:" +res.getString(0)+"\n");
             buffer.append(count+".\t\tWin:"+res.getString(2)+"%\t\t");
             buffer.append("Streak:"+res.getString(3)+"\t\t\t");
             buffer.append(res.getString(1)+"\n\n");
@@ -107,4 +107,3 @@ public class DatabaseHelperEasy extends SQLiteOpenHelper{
         return buffer.toString();
     }
 }
-

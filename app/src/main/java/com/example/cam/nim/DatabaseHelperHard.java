@@ -7,12 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelperHard extends SQLiteOpenHelper {
-    public static final String PLAYER_DATABASE = "hard.db";
+    public static final String PLAYER_DATABASE = "hard2.db";
     public static final String TABLE_NAME = "hard_table";
     public static final String COL_ID = "ID";
     public static final String COL_NAME = "NAME";
     public static final String COL_SCORE = "SCORE";
-
+    public static final String COL_STREAK = "STREAK";
 
     public DatabaseHelperHard(Context context) {
         super(context, PLAYER_DATABASE, null, 1);
@@ -20,7 +20,7 @@ public class DatabaseHelperHard extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT,NAME TEXT,SCORE INTEGER,LEVEL DOUBLE)");
+        db.execSQL("create table " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT,NAME TEXT,SCORE INTEGER,STREAK INTEGER)");
     }
 
     @Override
@@ -29,12 +29,12 @@ public class DatabaseHelperHard extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertData(String name,String score) {
+    public boolean insertData(String name,String score,String streak) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_NAME,name);
         contentValues.put(COL_SCORE,score);
-
+        contentValues.put(COL_STREAK,streak);
 
         long result = db.insert(TABLE_NAME,null ,contentValues);
         if(result == -1)
@@ -58,7 +58,46 @@ public class DatabaseHelperHard extends SQLiteOpenHelper {
         StringBuffer buffer = new StringBuffer();
         while(res.moveToNext())
         {
-            buffer.append(count+".\tWin:"+res.getString(2)+"%\t\t");
+            buffer.append(count+".\t\tWin:"+res.getString(2)+"%\t\t");
+            buffer.append("Streak:"+res.getString(3)+"\t\t\t");
+            buffer.append(res.getString(1)+"\n\n");
+            count++;
+        }
+        db.close();
+        return buffer.toString();
+    }
+    //return string that is alphabetize by player name
+    public String databaseSortNameToString(){
+        int count = 1;
+        SQLiteDatabase db =  getWritableDatabase();
+        String sortOrder = COL_NAME + " ASC";
+
+        Cursor res = db.query(TABLE_NAME, null, null, null, null, null, sortOrder);
+        StringBuffer buffer = new StringBuffer();
+        while(res.moveToNext())
+        {
+            //buffer.append("ID:" +res.getString(0)+"\n");
+            buffer.append(count+".\t\tWin:"+res.getString(2)+"%\t\t");
+            buffer.append("Streak:"+res.getString(3)+"\t\t\t");
+            buffer.append(res.getString(1)+"\n\n");
+            count++;
+        }
+        db.close();
+        return buffer.toString();
+    }
+    //return string that sorted by winning streak
+    public String databaseSortStreakToString(){
+        int count = 1;
+        SQLiteDatabase db =  getWritableDatabase();
+        String sortOrder = COL_STREAK + " DESC";
+
+        Cursor res = db.query(TABLE_NAME, null, null, null, null, null, sortOrder);
+        StringBuffer buffer = new StringBuffer();
+        while(res.moveToNext())
+        {
+            //buffer.append("ID:" +res.getString(0)+"\n");
+            buffer.append(count+".\t\tWin:"+res.getString(2)+"%\t\t");
+            buffer.append("Streak:"+res.getString(3)+"\t\t\t");
             buffer.append(res.getString(1)+"\n\n");
             count++;
         }
