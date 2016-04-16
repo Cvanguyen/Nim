@@ -1,5 +1,6 @@
 package com.example.cam.nim;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -149,6 +150,7 @@ public class ScoreboardActivity extends AppCompatActivity {
         playertxtText.setText(dbStringP);
 
     }
+<<<<<<< HEAD
     public void printDataSortName() {
         String dbStringE = dbHandlerEasy.databaseSortNameToString();
         easytxtText.setText(dbStringE);
@@ -168,6 +170,17 @@ public class ScoreboardActivity extends AppCompatActivity {
         hardtxtText.setText(dbStringH);
         String dbStringP = dbHandlerPlayer.databaseSortStreakToString();
         playertxtText.setText(dbStringP);
+=======
+
+    //Takes the player back to the main menu if the player clicks the back button
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        Intent mainMenuIntent = new Intent(this,MainMenuActivity.class);
+        startActivity(mainMenuIntent);
+        finish();
+>>>>>>> master
     }
 }
 
