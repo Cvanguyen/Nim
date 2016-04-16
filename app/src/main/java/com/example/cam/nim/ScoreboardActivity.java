@@ -8,10 +8,9 @@ import android.widget.TextView;
 
 public class ScoreboardActivity extends AppCompatActivity {
     TextView easytxtText,medtxtText, hardtxtText, playertxtText;
-    DatabaseHelperEasy dbHandlerEasy;
-    DatabaseHelperMedium dbHandlerMed;
-    DatabaseHelperHard dbHandlerHard;
-    DatabaseHelperPlayer dbHandlerPlayer;
+
+    DatabaseHelper dbHandlerEasy, dbHandlerMed, dbHandlerHard, dbHandlerPlayer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +40,7 @@ public class ScoreboardActivity extends AppCompatActivity {
         tabHost.addTab(tabSpec);
 
         easytxtText = (TextView) findViewById(R.id.easytextView);
-        dbHandlerEasy = new DatabaseHelperEasy(this);
+        dbHandlerEasy = new DatabaseHelper(this,"easy2.db","easy_table");
 
         // In method insertData(name, score,winstreak), will be inserting to different levels
         // Fake data below for testing. Replace with real data later on
@@ -52,7 +51,7 @@ public class ScoreboardActivity extends AppCompatActivity {
         dbHandlerEasy.insertData("Cam", "99.9", "2");
 
         medtxtText = (TextView) findViewById(R.id.mediumtextView);
-        dbHandlerMed = new DatabaseHelperMedium(this);
+        dbHandlerMed = new DatabaseHelper(this,"medium2.db", "medium_table");
 
         dbHandlerMed.insertData("Vincent", "99.6", "1");
         dbHandlerMed.insertData("Ken", "99.7", "3");
@@ -60,7 +59,7 @@ public class ScoreboardActivity extends AppCompatActivity {
         dbHandlerMed.insertData("Cam", "99.9", "2");
 
         hardtxtText = (TextView) findViewById(R.id.hardtextView);
-        dbHandlerHard = new DatabaseHelperHard(this);
+        dbHandlerHard = new DatabaseHelper(this,"hard2.db", "hard_table");
 
         dbHandlerHard.insertData("Vincent", "99.6", "1");
         dbHandlerHard.insertData("Ken", "99.7", "3");
@@ -68,7 +67,7 @@ public class ScoreboardActivity extends AppCompatActivity {
         dbHandlerHard.insertData("Cam", "99.9", "2");
 
         playertxtText = (TextView) findViewById(R.id.playertextView);
-        dbHandlerPlayer = new DatabaseHelperPlayer(this);
+        dbHandlerPlayer = new DatabaseHelper(this,"player2.db", "player_table");
 
         dbHandlerPlayer.insertData("Vincent", "99.6", "1");
         dbHandlerPlayer.insertData("Ken", "99.7", "3");
