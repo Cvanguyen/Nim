@@ -176,7 +176,7 @@ public class GameActivity extends Activity
                 finish();
             }
         });
-        playAgain.setOnClickListener(new View.OnClickListener() {
+        exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent mainMenuIntent = new Intent(GameActivity.this,MainMenuActivity.class);
@@ -184,7 +184,7 @@ public class GameActivity extends Activity
                 finish();
             }
         });
-        exitButton.setOnClickListener(new View.OnClickListener() {
+        playAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent playAgainIntent = new Intent(GameActivity.this, GameActivity.class);
@@ -221,9 +221,9 @@ public class GameActivity extends Activity
 
         if(!this.mGameInfo.isBoolPlayerTurn())
         {    //changes the text if it isn't the player
-            if(mGameInfo.getUpdatePlayer2()!= null)
+            if(mGameInfo.getUpdatePlayer2()!= null )
                 this.currentPlayer.setText(mGameInfo.getUpdatePlayer2());
-            if(this.mGameInfo.isBoolComputer())
+            else if(this.mGameInfo.isBoolComputer())
                 this.currentPlayer.setText(R.string.computerString);
 
             else
