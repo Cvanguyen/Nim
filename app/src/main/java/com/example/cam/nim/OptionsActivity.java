@@ -1,10 +1,13 @@
 package com.example.cam.nim;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,10 +17,9 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 /*
 Class:Options
-The activity creates the dialog box for menu to setup the game
+The activity creates the menu to setup the game
  */
 public class OptionsActivity extends Activity {
-    private boolean clicked = false;
     private GameInfo gameInfo;
     private Spinner rowSpinner,difficultySpinner;
     private Button okStart;
@@ -25,6 +27,8 @@ public class OptionsActivity extends Activity {
     private RadioGroup playerGroup;
     private RadioGroup audioGroup;
     private RadioGroup computerGroup;
+    private Dialog changePlayerName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -39,13 +43,10 @@ public class OptionsActivity extends Activity {
         setUpRowSpinner();
         setUpDifficultySpinner();
 
-
         okStart = (Button) findViewById(R.id.okStart);
-        okStart.setOnClickListener(new View.OnClickListener()
-        {
+        okStart.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
 
                 Intent playIntent = new Intent(v.getContext(), GameActivity.class);
                 Bundle mBundle = new Bundle();
@@ -53,12 +54,13 @@ public class OptionsActivity extends Activity {
                 * is started. GameActivity will then "unbundle" and create a new GameInfo object
                 * with identical values.                                                        */
                 mBundle.putBoolean("boolEnableAudio", gameInfo.isBoolEnableAudio());//Add audio to bundle
-                mBundle.putBoolean("boolPlayerTurn",gameInfo.isBoolPlayerTurn());//Add player turn to bundle
-                mBundle.putBoolean("boolComputer",gameInfo.isBoolComputer());//Add player turn to bundle
+                mBundle.putBoolean("boolPlayerTurn", gameInfo.isBoolPlayerTurn());//Add player turn to bundle
+                mBundle.putBoolean("boolComputer", gameInfo.isBoolComputer());//Add player turn to bundle
                 mBundle.putLong("computerSpeed", gameInfo.getComputerSpeed());//Add computer speed to bundle
                 mBundle.putInt("rowAmount", gameInfo.getnRowAmount());//Add row amount to bundle
                 mBundle.putDouble("computerDifficulty", gameInfo.getComputerDifficulty());//Add difficulty to bundle
-                mBundle.putString("newPlayerName", gameInfo.getUpdatedName1());
+                mBundle.putString("newPlayerName", gameInfo.getUpdatedPlayer1());
+                mBundle.putString("newOtherPlayerName",gameInfo.getUpdatePlayer2());
                 playIntent.putExtra("mBundle", mBundle);//Adds bundle to playIntent
                 startActivity(playIntent);
                 finish();
@@ -69,12 +71,11 @@ public class OptionsActivity extends Activity {
         cancelStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mainMenuIntent = new Intent(OptionsActivity.this,MainMenuActivity.class);
+                Intent mainMenuIntent = new Intent(OptionsActivity.this, MainMenuActivity.class);
                 startActivity(mainMenuIntent);
                 finish();
             }
         });
-
 
     }
 
@@ -136,13 +137,7 @@ public class OptionsActivity extends Activity {
         difficultySpinner.setAdapter(adapter);
 
     }
-    public void onClick(View view)
-    {
-        EditText editText = (EditText)findViewById(R.id.playerEditTextField);
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-        gameInfo.setUpdatedName1(editText.getText().toString());
-    }
+
     public void onDifficultySpinnerSelection()
     {
         switch(difficultySpinner.getSelectedItem().toString())
@@ -156,7 +151,6 @@ public class OptionsActivity extends Activity {
         }
     }
 
-
     //Takes the player back to the main menu if the player clicks the back button
     @Override
     public void onBackPressed()
@@ -167,6 +161,38 @@ public class OptionsActivity extends Activity {
         finish();
     }
 
+    public void ChangePlayerName( View view){
+        changePlayerName = new Dialog(OptionsActivity.this);
+        changePlayerName.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        changePlayerName.setContentView(R.layout.dialog_name);
+        changePlayerName.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        Button applyButton = (Button) changePlayerName.findViewById(R.id.okName);
+        Button cancelButton = (Button) changePlayerName.findViewById(R.id.cancelName);
+        final EditText playerEditText = (EditText) changePlayerName.findViewById(R.id.playerEditName);
+        final RadioGroup playerSwitch = (RadioGroup) changePlayerName.findViewById(R.id.PlayerNameGroup);
+        applyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int choice = playerSwitch.getCheckedRadioButtonId();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(playerEditText.getWindowToken(), 0);
+                if (choice == R.id.playerOne && !playerEditText.getText().toString().isEmpty())
+                    gameInfo.setUpdatedPlayer1(playerEditText.getText().toString());
+                if (choice == R.id.playerTwo && !playerEditText.getText().toString().isEmpty())
+                    gameInfo.setUpdatePlayer2(playerEditText.getText().toString());
+                changePlayerName.dismiss();
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changePlayerName.dismiss();
+            }
+        });
+
+        changePlayerName.show();
+    }
+
     //Sets who is first
 
     public void onPlayerRadio(View view) {
@@ -175,11 +201,11 @@ public class OptionsActivity extends Activity {
 
         switch (selectedRadio) {
             case (R.id.radioOponent): {
-                    gameInfo.setBoolPlayerTurn(false);
+                gameInfo.setBoolPlayerTurn(false);
                 break;
             }
             case (R.id.radioPlayer): {
-                    gameInfo.setBoolPlayerTurn(true);
+                gameInfo.setBoolPlayerTurn(true);
                 break;
             }
             default:
@@ -189,6 +215,7 @@ public class OptionsActivity extends Activity {
             }
         }
     }
+
     //Sets if  the audio is on
 
     public void onComputerRadio(View view) {
@@ -211,7 +238,6 @@ public class OptionsActivity extends Activity {
             }
         }
     }
-
 
 
     //Sets if  the audio is on

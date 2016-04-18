@@ -10,13 +10,15 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.cam.nim.">
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#FFFFFF"
-        android:textSize="25dp"
+        android:textSize="30dp"
         android:text="@string/Preferences" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="5dp"></View>
 
     <TextView
         android:layout_width="wrap_content"
@@ -31,7 +33,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/computerGroup">
+        android:id="@+id/computerGroup"
+        android:checkedButton="@+id/radioAgainstPlayer">
 
         <RadioButton
             android:id="@+id/radioAgainstPlayer"
@@ -40,7 +43,6 @@
             android:padding="10dp"
             android:text="@string/friendString"
             android:textColor="#FFFFFF"
-            android:buttonTint="#FFFFFF"
             android:onClick="onComputerRadio"/>
 
         <RadioButton
@@ -50,7 +52,6 @@
             android:padding="10dp"
             android:text="@string/computerString"
             android:textColor="#FFFFFF"
-            android:buttonTint="#FFFFFF"
             android:onClick="onComputerRadio"/>
     </RadioGroup>
     <View
@@ -70,7 +71,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/PlayerGroup">
+        android:id="@+id/PlayerGroup"
+        android:checkedButton="@+id/radioPlayer">
 
         <RadioButton
             android:id="@+id/radioPlayer"
@@ -79,7 +81,6 @@
             android:padding="10dp"
             android:text="@string/PlayerString"
             android:textColor="#FFFFFF"
-            android:buttonTint="#FFFFFF"
             android:onClick="onPlayerRadio"/>
 
         <RadioButton
@@ -89,7 +90,6 @@
             android:padding="10dp"
             android:text="@string/Oponent"
             android:textColor="#FFFFFF"
-            android:buttonTint="#FFFFFF"
             android:onClick="onPlayerRadio"/>
     </RadioGroup>
     <View
@@ -108,7 +108,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/AudioGroup">
+        android:id="@+id/AudioGroup"
+        android:checkedButton="@+id/radioEnable">
 
         <RadioButton
             android:id="@+id/radioEnable"
@@ -132,21 +133,34 @@
     <View
         android:layout_width="0dp"
         android:layout_height="5dp"></View>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+
         <!-- For Row selection-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:text="@string/rowPrompt"/>
+        <View
+            android:layout_width="10dp"
+            android:layout_height="0dp"></View>
         <Spinner
             android:id="@+id/spinnerRows"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
-            android:prompt="@string/rowPrompt">
+            android:spinnerMode="dropdown">
         </Spinner>
+
         <View
             android:layout_width="30dp"
+            android:layout_height="0dp"></View>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:text="@string/difficultyPrompt"/>
+        <View
+            android:layout_width="10dp"
             android:layout_height="0dp"></View>
         <Spinner
             android:id="@+id/spinnerDiffculty"
@@ -154,10 +168,9 @@
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
             android:backgroundTint="#226666"
-            android:prompt="@string/difficultyPrompt">
+            android:spinnerMode="dropdown">
 
         </Spinner>
-    </LinearLayout>
     <View
         android:layout_width="0dp"
         android:layout_height="5dp"></View>
@@ -183,33 +196,19 @@
     <View
         android:layout_width="0dp"
         android:layout_height="5dp"></View>
-    <LinearLayout
+
+    <Button
+        android:id="@+id/NewPlayerOne"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <EditText
-            android:layout_weight="1"
-            android:id="@+id/playerEditTextField"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="@string/edit_message"
-            android:background="#FFFFFF" />
-        <View
-            android:layout_width="10dp"
-            android:layout_height="0dp"></View>
-        <Button
-            android:layout_weight="1"
-            android:id="@+id/NewNameButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/button"
-            android:onClick="onClick"
-            android:padding="0dp"
-            android:text="@string/apply">
+        android:textColor="#FFFFFF"
+        android:background="@drawable/button"
+        android:onClick="ChangePlayerName"
+        android:padding="0dp"
+        android:text="Change Player Name">
 
-        </Button>
-    </LinearLayout>
+    </Button>
+
     <View
         android:layout_width="0dp"
         android:layout_height="5dp"></View>
@@ -217,6 +216,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="bottom"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
@@ -233,7 +233,6 @@
             android:layout_width="5dp"
             android:layout_height="0dp">
         </View>
-
 
         <Button
             android:id="@+id/canelStart"
