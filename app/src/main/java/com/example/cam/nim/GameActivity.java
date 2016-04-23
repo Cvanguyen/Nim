@@ -1,29 +1,22 @@
 package com.example.cam.nim;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 //import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 //import android.widget.ArrayAdapter;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 //import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -150,14 +143,20 @@ public class GameActivity extends Activity
         this.mGameInfo.setBoolEnableAudio(extras.getBoolean("boolEnableAudio"));
         this.mGameInfo.setBoolPlayerTurn(extras.getBoolean("boolPlayerTurn"));
         this.mGameInfo.setBoolComputer(extras.getBoolean("boolComputer"));
-        this.mGameInfo.setComputerDifficulty(extras.getDouble("computerDifficulty"));
+        if(mGameInfo.isBoolComputer()) {
+            this.mGameInfo.setComputerDifficulty(extras.getDouble("computerDifficulty"));
+            this.mGameInfo.setComputerSpeed(extras.getLong("computerSpeed"));
+        }
         this.mGameInfo.setnRowAmount(extras.getInt("rowAmount"));
         this.mGameInfo.setTotalPieces(this.mGameInfo.findTotal(this.mGameInfo.getnRowAmount()));
-        this.mGameInfo.setComputerSpeed(extras.getLong("computerSpeed"));
+
         this.mGameInfo.setUpdatedPlayer1(extras.getString("newPlayerName"));
         this.mGameInfo.setUpdatePlayer2(extras.getString("newOtherPlayerName"));
 
     }
+    //Tells the player who won
+    // gives them the option to
+    //exit, view scoreboard, or play with the same settings
     public void WinDialog(){
         winDialog = new Dialog(GameActivity.this);
         winDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -166,21 +165,30 @@ public class GameActivity extends Activity
         final TextView winnerName = (TextView) winDialog.findViewById(R.id.winnerName);
         final Button scoreboard = (Button) winDialog.findViewById(R.id.viewScoreboardButton);
         final Button playAgain = (Button) winDialog.findViewById(R.id.playAgainButton);
-        final Button exitButton = (Button) winDialog.findViewById(R.id.exitButton);
+        final Button newGame = (Button) winDialog.findViewById(R.id.newGame);
 
         scoreboard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent scoreIntent = new Intent(GameActivity.this,ScoreboardActivity.class);
+                Intent scoreIntent = new Intent(GameActivity.this, ScoreboardActivity.class);
                 startActivity(scoreIntent);
                 finish();
             }
         });
-        exitButton.setOnClickListener(new View.OnClickListener() {
+        newGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mainMenuIntent = new Intent(GameActivity.this,MainMenuActivity.class);
-                startActivity(mainMenuIntent);
+                Intent newGameIntent = new Intent(GameActivity.this, OptionsActivity.class);
+                Bundle mBundle = new Bundle();
+                if(mGameInfo.isBoolComputer()){
+                    mBundle.putBoolean("PlayWithComp", true);
+                }
+                else
+                {
+                    mBundle.getBoolean("PlayWithComp",false);
+                }
+                newGameIntent.putExtra("mBundle", mBundle);
+                startActivity(newGameIntent);
                 finish();
             }
         });
@@ -204,9 +212,7 @@ public class GameActivity extends Activity
         howToPlayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         howToPlayDialog.setContentView(R.layout.dialog_howtoplay);
         howToPlayDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
         Button okayButton = (Button) howToPlayDialog.findViewById(R.id.okay);
-
         okayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,31 +224,28 @@ public class GameActivity extends Activity
 
     //Assigns the correct name to the current player text
     private void correctPlayerName() {
-
+        //changes the text if it isn't the player
         if(!this.mGameInfo.isBoolPlayerTurn())
-        {    //changes the text if it isn't the player
-
+        {
             if(this.mGameInfo.isBoolComputer())
                 this.currentPlayer.setText(R.string.computerString);
-            else if(mGameInfo.getUpdatePlayer2()!= null && !mGameInfo.isBoolComputer() )
+            else if(!mGameInfo.isBoolComputer() )
                 this.currentPlayer.setText(mGameInfo.getUpdatePlayer2());
             else
                 this.currentPlayer.setText(R.string.friendString);
         }
         //changes it back the the player
         else {
-            if(mGameInfo.getUpdatedPlayer1() != null)
+            if( !mGameInfo.getUpdatedPlayer1().equals("Player"))
                 this.currentPlayer.setText(mGameInfo.getUpdatedPlayer1());
-
             else
                 this.currentPlayer.setText(R.string.PlayerString);
         }
-
     }
 
     private void ChangePlayerText() {
-        if(mGameInfo.getTotalPieces() > 0) {    //Does a fade animation
-            this.currentPlayer.setAnimation(fadeInPlayerText);
+        if(mGameInfo.getTotalPieces() > 0) { //checks if there are pieces to remove
+            this.currentPlayer.setAnimation(fadeInPlayerText);//Does a fade animation
             //switches the player turn
             this.mGameInfo.setBoolPlayerTurn(!this.mGameInfo.isBoolPlayerTurn());
             correctPlayerName();
@@ -421,7 +424,7 @@ public class GameActivity extends Activity
                 mSelectedPieces = new ArrayList<>();
                 ChangePlayerText();
             }
-        }, 500*mGameInfo.getComputerSpeed()+500);
+        }, 5*mGameInfo.getComputerSpeed()+500);
     }
 
     private void checkRowSelect(int currentID)
