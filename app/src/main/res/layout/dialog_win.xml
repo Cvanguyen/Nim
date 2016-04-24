@@ -11,17 +11,6 @@
         android:textColor="#FFFFFF"
         android:id="@+id/winnerName"
         android:textSize="30dp"/>
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="5dp"/>
-    <Button
-        android:id="@+id/exitButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:background="@drawable/button"
-        android:text="@string/Exit" />
     <View
         android:layout_width="0dp"
         android:layout_height="5dp"/>
@@ -32,6 +21,7 @@
         android:textColor="#FFFFFF"
         android:background="@drawable/button"
         android:text="@string/PlayAgain" />
+
     <View
         android:layout_width="0dp"
         android:layout_height="5dp"/>
@@ -42,4 +32,15 @@
         android:textColor="#FFFFFF"
         android:background="@drawable/button"
         android:text="@string/ViewScoreBoard"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="5dp"/>
+    <Button
+        android:id="@+id/newGame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/button"
+        android:text="@string/newGame" />
 </LinearLayout>

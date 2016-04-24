@@ -27,18 +27,9 @@ public class GameInfo {
         this.computerSpeed = 1;
         this.totalPieces = findTotal(nRowAmount);
         this.mRemainingDots = new ArrayList<>();
-        this.updatedPlayer1 = null;
-        this.updatePlayer2 = null;
+        this.updatedPlayer1 = "Player";
+        this.updatePlayer2 = "Friend";
 
-    }
-    GameInfo(boolean enableAudio,boolean playerTurn, long computerSpeed,int nRowAmount, double computerDifficulty)
-    {
-        this.boolPlayerTurn = playerTurn;
-        this.boolEnableAudio = enableAudio;
-        this.computerSpeed = computerSpeed;
-        this.nRowAmount = nRowAmount;
-        this.mComputerDifficulty = computerDifficulty;
-        this.mRemainingDots = new ArrayList<>();
     }
 
     public boolean isBoolEnableAudio() {
@@ -49,10 +40,10 @@ public class GameInfo {
         this.boolEnableAudio = boolEnableAudio;
     }
 
-    public double findTotal(int nRowAmount)
-    {
-        return .5*( nRowAmount *( nRowAmount + 1));
+    public double findTotal(int nRowAmount) {
+        return .5 * (nRowAmount * (nRowAmount + 1));
     }
+
     public boolean isBoolPlayerTurn() {
         return boolPlayerTurn;
     }
@@ -94,14 +85,11 @@ public class GameInfo {
     }
 
     /*Populates remainingDots arraylist using this.getnRowAmount*/
-    public void populateGameBoard()
-    {
-        for(int i = 0; i < this.getnRowAmount();i++)
-        {
+    public void populateGameBoard() {
+        for (int i = 0; i < this.getnRowAmount(); i++) {
             //Log.d("GameInfo", "Adding row");
             ArrayList<Boolean> tempList = new ArrayList<>();
-            for(int j = 0; j <= i;j++)
-            {
+            for (int j = 0; j <= i; j++) {
                 tempList.add(Boolean.TRUE);
                 //Log.d("GameInfo", "Adding bool");
             }
@@ -138,9 +126,22 @@ public class GameInfo {
     }
 
     public void setTotalPieces(double totalPieces) {
-        if(this.totalPieces < 0)
+        if (this.totalPieces < 0)
             this.totalPieces = 0;
         else
             this.totalPieces = totalPieces;
+    }
+
+    //convert difficulty to integer
+    public int getdifficultyCoversion() {
+        int level = 0;
+        if (Double.compare(this.mComputerDifficulty, 0.0) == 0) {
+            level = 0;
+        } else if (Double.compare(this.mComputerDifficulty, 0.5) == 0) {
+            level = 1;
+        } else {
+            level = 2;
+        }
+        return level;
     }
 }
